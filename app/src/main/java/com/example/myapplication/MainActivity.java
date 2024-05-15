@@ -31,6 +31,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Weather.updateAllWidgets(getApplicationContext(), R.layout.weather, Weather.class);
+    }
+
     public void toLogin(){
         viewPager.setCurrentItem(1);
     }
