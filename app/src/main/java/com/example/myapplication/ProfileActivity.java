@@ -84,6 +84,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         btn_find.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 try {
@@ -93,6 +94,8 @@ public class ProfileActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
+                Weather.Mode = Weather.HAND_MODE;
+                Weather.updateAllWidgets(getApplicationContext(), R.layout.weather, Weather.class);
 
             }
         });
@@ -108,6 +111,8 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d("my_location", "click");
+                Weather.Mode = Weather.GPS_MODE;
+                Weather.updateAllWidgets(getApplicationContext(), R.layout.weather, Weather.class);
                 requestLocation();
             }
         });
@@ -213,6 +218,7 @@ public class ProfileActivity extends AppCompatActivity {
         //Получение города
         String value_city = jsonObject.getString("name");
         city_name.setText(value_city);
+        Weather.city_name = value_city;
 
         //Получение температуры
         int temp_value = (int)Math.round(jsonObject.getJSONObject("main").getDouble("temp"));

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.text.BoringLayout;
 import android.util.Log;
 import android.util.TypedValue;
 import android.widget.ImageView;
@@ -25,14 +26,17 @@ import com.bumptech.glide.request.transition.Transition;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 /**
  * Implementation of App Widget functionality.
  */
 public class Weather extends AppWidgetProvider {
 
-
-
-
+    public static final String GPS_MODE = "weather_gps_mode";
+    public static final String  HAND_MODE = "weather_hand_mode";
+    public static String Mode = HAND_MODE;
+    public static String city_name = "Москва";
     private static final String SYNC_CLICKED    = "automaticWidgetSyncButtonClick";
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
@@ -86,7 +90,7 @@ public class Weather extends AppWidgetProvider {
                 }
             });
             //weatherHelper.getWeatherByGPS();
-            weatherHelper.getWeather("Казань");
+            weatherHelper.getWeather(city_name);
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }
@@ -111,11 +115,17 @@ public class Weather extends AppWidgetProvider {
             weatherHelper.setOnDownloadedWeather(new OnDownloadedWeather() {
                 @Override
                 public void onDownload(String jsonString) throws JSONException {
-                    setWeather(jsonString, context);
+                    setWeather(jsonString, context.getApplicationContext());
                 }
             });
 
-            weatherHelper.getWeather("Москва");
+
+            if(Objects.equals(Mode, HAND_MODE)){
+                weatherHelper.getWeather(city_name);
+            } else if (Objects.equals(Mode, GPS_MODE)){
+                weatherHelper.getWeatherByGPS();
+            }
+
 
             appWidgetManager.updateAppWidget(watchWidget, remoteViews);
 
@@ -161,6 +171,8 @@ public class Weather extends AppWidgetProvider {
 
         String like = jsonObject.getJSONArray("weather").getJSONObject(0).getString("description");
         like = like.substring(0, 1).toUpperCase() + like.substring(1);
+
+
         remoteViews.setTextViewText(R.id.widget_like, like);
 
         String icon = jsonObject.getJSONArray("weather").getJSONObject(0).getString("icon");
