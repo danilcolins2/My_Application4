@@ -26,6 +26,7 @@ import com.bumptech.glide.request.transition.Transition;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.Objects;
 
 /**
@@ -198,7 +199,7 @@ public class Weather extends AppWidgetProvider {
                 });
 
 
-
+        remoteViews.setTextViewText(R.id.last_update_time, Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE));
 
         appWidgetManager.updateAppWidget(thisWidget, remoteViews);
     }
