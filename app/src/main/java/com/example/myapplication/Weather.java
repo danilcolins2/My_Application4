@@ -1,5 +1,8 @@
 package com.example.myapplication;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -26,6 +29,7 @@ import com.bumptech.glide.request.transition.Transition;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -111,6 +115,8 @@ public class Weather extends AppWidgetProvider {
             remoteViews = new RemoteViews(context.getPackageName(), R.layout.weather);
             watchWidget = new ComponentName(context, Weather.class);
 
+            remoteViews.setViewVisibility(R.id.progressBar, VISIBLE);
+            remoteViews.setViewVisibility(R.id.update_btn, GONE);
 
             Log.d("widget_test", "Click");
             weatherHelper.setOnDownloadedWeather(new OnDownloadedWeather() {
@@ -198,8 +204,12 @@ public class Weather extends AppWidgetProvider {
                     }
                 });
 
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        remoteViews.setTextViewText(R.id.last_update_time, sdf.format(Calendar.getInstance().getTime()));
 
-        remoteViews.setTextViewText(R.id.last_update_time, Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE));
+        remoteViews.setViewVisibility(R.id.progressBar, GONE);
+        remoteViews.setViewVisibility(R.id.update_btn, VISIBLE);
+
 
         appWidgetManager.updateAppWidget(thisWidget, remoteViews);
     }
